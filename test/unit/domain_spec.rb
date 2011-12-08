@@ -2,7 +2,7 @@ require './test/spec_helper'
 
 describe Replay do
   class ReplayTestClass
-    include Replay
+    include Replay::Domain
 
     attr_accessor :bar_value
 
