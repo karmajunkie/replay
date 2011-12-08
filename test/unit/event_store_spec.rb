@@ -6,6 +6,9 @@ describe Replay::EventStore do
       config.storage = Replay::TestStorage.new
     end
   end
+  after do
+    Replay::EventStore.clear_listeners
+  end
   describe "#handle_event" do
     def action
       Replay::EventStore.handle_event(:foo_event, 123, {:bar => "fly"})

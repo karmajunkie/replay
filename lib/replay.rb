@@ -5,6 +5,7 @@ require 'replay/test_storage'
 require 'replay/configuration'
 require 'replay/event_store'
 require 'replay/domain'
+require 'replay/projector'
 
 module Replay
 

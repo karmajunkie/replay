@@ -20,6 +20,10 @@ module Replay
       self.listeners[event] << new_listener
     end
 
+    def self.clear_listeners
+      listeners = {}
+    end
+
     def self.handle_event(event, model_id, *args)
       if configuration.storage
         configuration.storage.each do |event_store_adapter|
