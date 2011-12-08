@@ -1,0 +1,25 @@
+class Domain::Model 
+  include Replay::Domain
+
+  def twitter_update
+    #do stuff
+    raise_event "twitter_updated", status
+  end
+
+  apply "twitter_updated" do |guid, status|
+    model = Model.find(guid) # or YAML.load(memcache.get(guid)) or ... 
+    model.twitter_status = status
+    model.save
+  end
+  
+end
+
+
+#usage
+model = Model.find(params[:model_id])
+model.twitter_update
+
+#________________
+
+#rebuilding
+model.rebuild
