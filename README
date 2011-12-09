@@ -3,13 +3,12 @@ class Domain::Model
 
   def twitter_update
     #do stuff
-    raise_event "twitter_updated", status
+    signal_event "twitter_updated", status
+    self.save
   end
 
-  apply "twitter_updated" do |guid, status|
-    model = Model.find(guid) # or YAML.load(memcache.get(guid)) or ... 
+  apply "twitter_updated" do |status|
     model.twitter_status = status
-    model.save
   end
   
 end
@@ -19,7 +18,10 @@ end
 model = Model.find(params[:model_id])
 model.twitter_update
 
-#________________
-
-#rebuilding
-model.rebuild
+#listener
+class TweetReport
+  include Replay::Projector
+  listen :twitter_updated do |model_id, status|
+     #update read model/report/whatever...
+  end
+end
