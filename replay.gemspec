@@ -19,7 +19,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
+  s.add_development_dependency "activerecord"
+  s.add_development_dependency "sqlite3-ruby"
   # s.add_runtime_dependency "rest-client"
   s.add_runtime_dependency "activesupport"
 end

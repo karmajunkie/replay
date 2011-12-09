@@ -4,6 +4,7 @@ require 'replay/unknown_event_error'
 require 'replay/test_storage'
 require 'replay/configuration'
 require 'replay/event_store'
+require 'replay/active_record_event_store'
 require 'replay/domain'
 require 'replay/projector'
 
