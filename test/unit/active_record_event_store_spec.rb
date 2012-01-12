@@ -15,9 +15,9 @@ describe Replay::ActiveRecordEventStore do
   end
   describe "#store" do
     it "should create an event in the database" do
-      count = Replay::AREvent.count
+      count = Replay::ActiveRecordEvent.count
       action
-      (Replay::AREvent.count - count).must_equal 1
+      (Replay::ActiveRecordEvent.count - count).must_equal 1
     end
 
   end

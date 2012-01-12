@@ -15,6 +15,7 @@ module Replay::Domain
   def apply_event(event, *args)
     event_block = event_blocks[event.to_sym]
     raise UnknownEventError.new("#{event} is not a known event on class #{self.class.name}") unless event_block
+    EventStore.log_event(event, self.id, *args)
     self.instance_exec(*args, &event_block)
   end
 
