@@ -1,13 +1,13 @@
 if defined?(ActiveRecord)
   module Replay
     class ActiveRecordEvent < ::ActiveRecord::Base
-      set_table_name "replay_events"
+      self.table_name = "replay_events"
       serialize :arguments
     end
 
     #needs model id
     class ActiveRecordEventLogEntry < ::ActiveRecord::Base
-      set_table_name "replay_event_log_entries"
+      self.table_name = "replay_event_log_entries"
       serialize :data
     end
 
