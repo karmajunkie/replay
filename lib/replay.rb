@@ -1,6 +1,7 @@
 require "replay/version"
 require 'active_support/concern'
 require 'replay/unknown_event_error'
+require 'replay/entity_not_found_error'
 require 'replay/test_storage'
 require 'replay/configuration'
 require 'replay/event'

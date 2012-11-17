@@ -24,6 +24,25 @@ module Replay::Domain
   end
 
   module ClassMethods
+    def find(model_id)
+      events = Replay::EventStore.find_model_events(model_id)
+      raise EntityNotFoundError.new("No model found for #{model_id}") if events.length == 0
+
+      instance = self.new_replay(model_id)
+      events.each do |e|
+        event_block = event_blocks[e.event.to_sym]
+        args = e.arguments
+        instance.instance_exec(*args, &event_block)
+      end
+      instance
+    end
+
+    def new_replay(model_id)
+      instance = self.new
+      instance.send("id=".to_sym, model_id)
+      instance
+    end
+
     def apply(event, &block)
       event_blocks[event.to_sym] = block
     end

@@ -1,0 +1,2 @@
+class EntityNotFoundError < RuntimeError
+end

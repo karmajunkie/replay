@@ -51,5 +51,16 @@ module Replay
         end
       end
     end
+
+    def self.find_model_events(model_id)
+      if configuration.storage
+        configuration.storage.each do |event_store_adapter|
+          # TODO: need a primary storage for replays ????
+          # this just uses first one found
+          return event_store_adapter.find_model_events(model_id)
+        end
+      end
+      raise "no storage configured"
+    end
   end
 end

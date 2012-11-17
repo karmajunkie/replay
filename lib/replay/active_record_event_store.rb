@@ -12,6 +12,10 @@ if defined?(ActiveRecord)
     end
 
     class ActiveRecordEventStore
+      def find_model_events(model_id)
+        Replay::ActiveRecordEvent.where(:model_id => model_id).order("created_at ASC")
+      end
+
       def store(event, model_id, *args)
         ar_event = Replay::ActiveRecordEvent.new
         ar_event.event = event
