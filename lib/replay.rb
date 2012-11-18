@@ -1,5 +1,6 @@
 require "replay/version"
 require 'active_support/concern'
+require 'active_support/hash_with_indifferent_access'
 require 'replay/unknown_event_error'
 require 'replay/entity_not_found_error'
 require 'replay/test_storage'

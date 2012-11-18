@@ -8,7 +8,8 @@ module Replay
       attr_accessor :test_mode
       attr_accessor :event_stream
     end
-    self.listeners = {}
+
+    self.listeners = HashWithIndifferentAccess.new
     self.configuration = Replay::Configuration.new
     self.event_stream = []
 
@@ -45,6 +46,7 @@ module Replay
           event_store_adapter.store(event, model_id, *args)
         end
       end
+
       if self.listeners[event]
         self.listeners[event].each do |listener|
           listener.handle_event(event, model_id, *args)
