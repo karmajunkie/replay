@@ -14,6 +14,8 @@ module Replay::Projector
     end
 
     def handle_event(event, model_id, *args)
+      raise EventNotRegisteredError.new(event) unless listening_blocks[event]
+
       listening_blocks[event].each do |block|
         block.call(model_id, *args)
       end
