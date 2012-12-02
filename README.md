@@ -31,9 +31,9 @@ class Domain::Model
   include Replay::Domain
 
   def twitter_update
-    #do stuff
+    # do stuff
+    
     signal_event "twitter_updated", status
-    self.save
   end
 
   apply "twitter_updated" do |status|
@@ -55,8 +55,28 @@ model.twitter_update
 ```
 class TweetReport
   include Replay::Projector
+  
   listen :twitter_updated do |model_id, status|
-    #update read model/report/whatever...
+    # update read model/report/whatever...
   end
 end
+```
+
+### rails initializer, i.e. config/initializers/replay_config.rb
+
+```
+# Replay needs to have its event store configured
+unless Rails.env.test?
+  Replay::EventStore.configure do |config|
+    config.storage = Replay::ActiveRecordEventStore.new
+  end
+end
+
+# Rails will not always load projector event handler blocks in development mode, you can initialize event objects so the handlers are loaded
+if Rails.env.development?
+  TweetReport.new
+  # repeat for each projector...
+end
+
+# Warning: changes to projector objects will require restarting the development server
 ```
