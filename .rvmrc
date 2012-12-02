@@ -1,1 +1,1 @@
-rvm use 1.9.2@replay
+rvm use 1.9.2@replay --create

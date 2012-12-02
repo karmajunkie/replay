@@ -25,4 +25,10 @@ describe Replay::EventStore do
       action
     end
   end
+
+  describe "#find_model_events" do
+    it "implements method" do
+      Replay::EventStore.respond_to?(:find_model_events).must_equal true
+    end
+  end
 end

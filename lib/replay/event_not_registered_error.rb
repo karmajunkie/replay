@@ -1,0 +1,2 @@
+class EventNotRegisteredError < RuntimeError
+end

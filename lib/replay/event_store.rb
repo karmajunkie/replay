@@ -8,7 +8,8 @@ module Replay
       attr_accessor :test_mode
       attr_accessor :event_stream
     end
-    self.listeners = {}
+
+    self.listeners = HashWithIndifferentAccess.new
     self.configuration = Replay::Configuration.new
     self.event_stream = []
 
@@ -45,11 +46,23 @@ module Replay
           event_store_adapter.store(event, model_id, *args)
         end
       end
+
       if self.listeners[event]
         self.listeners[event].each do |listener|
           listener.handle_event(event, model_id, *args)
         end
       end
+    end
+
+    def self.find_model_events(model_id)
+      if configuration.storage
+        configuration.storage.each do |event_store_adapter|
+          # TODO: need a primary storage for replays ????
+          # this just uses first one found
+          return event_store_adapter.find_model_events(model_id)
+        end
+      end
+      raise "no storage configured"
     end
   end
 end

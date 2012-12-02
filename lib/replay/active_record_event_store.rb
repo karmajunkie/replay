@@ -1,17 +1,21 @@
 if defined?(ActiveRecord)
   module Replay
     class ActiveRecordEvent < ::ActiveRecord::Base
-      set_table_name "replay_events"
+      self.table_name = "replay_events"
       serialize :arguments
     end
 
     #needs model id
     class ActiveRecordEventLogEntry < ::ActiveRecord::Base
-      set_table_name "replay_event_log_entries"
+      self.table_name = "replay_event_log_entries"
       serialize :data
     end
 
     class ActiveRecordEventStore
+      def find_model_events(model_id)
+        Replay::ActiveRecordEvent.where(:model_id => model_id).order("created_at ASC")
+      end
+
       def store(event, model_id, *args)
         ar_event = Replay::ActiveRecordEvent.new
         ar_event.event = event
