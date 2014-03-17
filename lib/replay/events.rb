@@ -1,0 +1,24 @@
+
+module Replay
+  module Events
+    def self.extended(base)
+      base.extend(ClassMethods)
+    end
+    def self.included(base)
+      base.extend(ClassMethods)
+      #self.constants.each{|c| base.const_set(c, const_get(c))}
+    end
+    module ClassMethods
+      def events(mod = nil, &block)
+        unless mod
+          mod = Module.new do
+            extend Replay::EventDeclarations
+            module_eval &block
+          end
+        end
+        include mod
+      end
+    end
+
+  end
+end
