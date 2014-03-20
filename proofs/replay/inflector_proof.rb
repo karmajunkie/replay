@@ -8,6 +8,9 @@ module Replay::Inflector::Proof
   def underscores?(from, to)
     Replay::Inflector.underscore(from) == to
   end
+  def constantizes?(classname, expected_constant)
+    Replay::Inflector.constantize(classname) == expected_constant
+  end
 end
 Replay::Inflector.extend(Replay::Inflector::Proof)
 
@@ -22,4 +25,8 @@ proof "underscore transforms a classname to 'module.class'" do
   Replay::Inflector.prove{ underscores?("ReplayTest::Test", 'replay_test.test')}
   Replay::Inflector.prove{ underscores?("Replay2Test::Test", 'replay2_test.test')}
   Replay::Inflector.prove{ underscores?("Replay::TestData", 'replay.test_data')}
+end
+
+proof "constantize finds the constant for a given string, if defined" do
+  Replay::Inflector.prove{ constantizes? "Replay::ReplayError", Replay::ReplayError }
 end

@@ -48,4 +48,8 @@ class Replay::Inflector
       word.downcase!
       word
     end
+
+    def self.constantize(class_name)
+      class_name.to_s.split("::").inject(Kernel){|parent, mod| parent.const_get(mod)}
+    end
 end
