@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   #s.add_development_dependency "sqlite3-ruby"
   #s.add_runtime_dependency "rest-client"
-  s.add_runtime_dependency "virtus", "~>1.0.2"
+  s.add_runtime_dependency "virtus", "~>1.0.0"
 end
