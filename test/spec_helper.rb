@@ -1,6 +1,5 @@
 $:<<"lib"
-require 'active_record'
+require 'virtus'
 require 'minitest/autorun'
 require 'replay'
-require 'ruby-debug'
-require 'mocha'
+require 'byebug'
