@@ -21,13 +21,12 @@ module Replay
 
     def declare_event(base, name, props)
       klass = Class.new do
-        include Virtus.model
+        include Virtus.value_object
 
-        props.keys.each do |prop|
-          attribute prop, props[prop]
-          #self.define_method name do 
-            #self.new
-          #end
+        values do
+          props.keys.each do |prop|
+            attribute prop, props[prop]
+          end
         end
       end
       base.const_set name, klass
