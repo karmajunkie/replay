@@ -1,24 +1,31 @@
 module Replay
   module Publisher
     def self.included(base)
+      include_essentials base
+    end
+
+    def self.include_essentials(base)
       base.instance_variable_set :@application_blocks, {}
       base.extend ClassMethods
       base.extend(Replay::Events)
     end
-    attr_accessor :publisher
 
-    def initialize()
-      @_events ||= []
+    def initialize(*args)
+      @subscription_manager = Replay::SubscriptionManager.new()
       super
     end
+
+    def add_subscriber(subscriber)
+      @subscription_manager.add_subscriber(subscriber)
+    end
+
     def apply(events, raise_unhandled = true)
       return apply([events], raise_unhandled) unless events.is_a?(Array)
 
       events.each do |event|
         blk = block_for(event.class)
         raise UnhandledEventError.new "event #{event.class.name} is not handled by #{self.class.name}" if (blk.nil? && raise_unhandled)
-        self.instance_exec(event, &block_for(event.class))
-        @_events << event
+        self.instance_exec(event, &blk)
       end
       return self
     end
@@ -30,11 +37,12 @@ module Replay
 
     def publish(event)
       apply(event)
-      @publisher.publish(to_key, event) if @publisher
+      @subscription_manager.notify_subscribers(to_stream_id, event)
       return self
     end
 
-    def to_key
+
+    def to_stream_id
       raise Replay::UndefinedKeyError.new("No key attribute defined for #{self.class.to_s}") unless self.class.key_attr
       self.send(self.class.key_attr).to_s
     end

@@ -3,6 +3,7 @@ require 'replay/test'
 
 class ReplayTest
   include Replay::Publisher
+  include Replay::EventExaminer
 
   key :pkey
 
@@ -53,7 +54,18 @@ module ReplayTest::Proof
     event = SomeEvent(pid: 123)
     publish(event)
     @_events.detect{|e| e==event}
-    #test_event_stream.published?('1', SomeEvent(pid:123))
+  end
+
+  def subscribes()
+    sub = Class.new do
+      def published(stream, event)
+        @published = true
+      end
+      def published?; @published; end
+    end.new
+    add_subscriber(sub)
+    publish(ReplayTest::SomeEvent.new(pid: 123))
+    sub.published?
   end
 end
 
@@ -97,6 +109,11 @@ end
 proof "Can publish events to the indicated stream" do
   r = ReplayTest.new
   r.prove { can_publish_events? }
+end
+
+proof "Subscriber can subscribe to events from publisher" do
+  r = ReplayTest.new
+  r.prove{ subscribes }
 end
 
 proof "Returns self from publish" do

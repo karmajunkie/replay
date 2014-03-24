@@ -1,5 +1,5 @@
 module Replay 
-class UndefinedKeyError < ReplayError
+  class UndefinedKeyError < ReplayError
 
-end
+  end
 end
