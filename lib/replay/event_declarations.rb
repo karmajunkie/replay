@@ -21,7 +21,7 @@ module Replay
 
     def declare_event(base, name, props)
       klass = Class.new do
-        include Virtus.value_object
+        include Replay::EventDecorator
 
         values do
           props.keys.each do |prop|
