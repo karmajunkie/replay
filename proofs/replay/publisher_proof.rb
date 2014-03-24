@@ -56,7 +56,7 @@ module ReplayTest::Proof
     @_events.detect{|e| e==event}
   end
 
-  def subscribes()
+  def subscribers_receive_events
     sub = Class.new do
       def published(stream, event)
         @published = true
@@ -66,6 +66,16 @@ module ReplayTest::Proof
     add_subscriber(sub)
     publish(ReplayTest::SomeEvent.new(pid: 123))
     sub.published?
+  end
+  def subscribes()
+    sub = Class.new do
+      def published(stream, event)
+        @published = true
+      end
+      def published?; @published; end
+    end.new
+    add_subscriber(sub)
+    has_subscriber?(sub)
   end
 end
 
@@ -114,6 +124,11 @@ end
 proof "Subscriber can subscribe to events from publisher" do
   r = ReplayTest.new
   r.prove{ subscribes }
+end
+
+proof "Subscriber receives published events" do
+  r = ReplayTest.new
+  r.prove{ subscribers_receive_events }
 end
 
 proof "Returns self from publish" do
