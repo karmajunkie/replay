@@ -15,6 +15,7 @@ module Replay
             extend Replay::EventDeclarations
             module_eval &block
           end
+          self.const_set(:"#{self.to_s.split("::")[-1]}Events", mod)
         end
         include mod
       end
