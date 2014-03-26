@@ -1,15 +1,29 @@
 require 'virtus'
 
 module Replay
+  class ReplayError            < StandardError; end
+  class UndefinedKeyError      < ReplayError; end
+  class UnhandledEventError    < ReplayError; end
+  class UnknownEventError      < ReplayError; end
+  class InvalidStorageError    < ReplayError;
+    def initialize(*args)
+      klass = args.shift
+      super( "Storage #{klass.to_s} does not implement #event_stream(stream, event)", *args)
+    end
+  end
+  class InvalidSubscriberError < ReplayError;
+    def initialize(*args)
+      obj = args.shift
+      super( "Subscriber#{obj.to_s} does not implement #published(stream, event)", *args)
+    end
+  end
 end
+
 require 'replay/inflector'
 require 'replay/events'
 require 'replay/event_decorator'
 require 'replay/event_declarations'
-require 'replay/replay_error'
-require 'replay/unhandled_event_error'
-require 'replay/undefined_key_error'
-require 'replay/invalid_subscriber_error'
 require 'replay/publisher'
 require 'replay/subscription_manager'
+require 'replay/backends'
 
