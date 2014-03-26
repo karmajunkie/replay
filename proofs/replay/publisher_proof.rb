@@ -131,6 +131,10 @@ proof "Subscriber receives published events" do
   r.prove{ subscribers_receive_events }
 end
 
+proof "Returns self from apply" do
+  r = ReplayTest.new
+  r.prove{ apply([]) == self}
+end
 proof "Returns self from publish" do
   r = ReplayTest.new
   r.prove{ publish([]) == self}

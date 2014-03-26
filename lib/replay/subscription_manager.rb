@@ -9,7 +9,7 @@ module Replay
       if subscriber.respond_to?(:published)
         @subscribers << subscriber 
       else
-        raise Replay::InvalidSubscriberError.new
+        raise Replay::InvalidSubscriberError.new(subscriber)
       end
     end
 
