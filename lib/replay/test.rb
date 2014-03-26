@@ -7,10 +7,14 @@ module Replay::EventExaminer
   end
   def published?(event, fuzzy=false)
     if fuzzy
-      @_events.detect{|e| event.is_a?(Class) ? e.class == event : e == event}
+      !(@_events.detect{|e| event.kind_of_matches?(e) }.nil?)
     else
-      @_events
+      @_events.detect{|e| event.is_a?(Class) ? e.class == event : e == event}
     end
+  end
+
+  def similar_events(event)
+    @_events.select{|e| e.class == event.class}
   end
 
   def initialize()
@@ -24,10 +28,11 @@ module Replay::EventExaminer
 
   def apply(events, raise_unhandled = true)
     return apply([events], raise_unhandled) unless events.is_a?(Array)
-    super(events, raise_unhandled)
+    retval = super(events, raise_unhandled)
     events.each do |event|
       @_events << event
     end
+    return retval
   end
 
   def has_subscriber?(subscriber)
