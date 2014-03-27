@@ -11,7 +11,7 @@ module Replay
     end
 
     def initialize(*args)
-      @subscription_manager = Replay::SubscriptionManager.new()
+      @subscription_manager = Replay::SubscriptionManager.new(Replay.logger)
       super
     end
 

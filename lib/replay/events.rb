@@ -20,6 +20,5 @@ module Replay
         include mod
       end
     end
-
   end
 end

@@ -1,6 +1,14 @@
 require 'virtus'
 
 module Replay
+  def self.logger=(logger)
+    @logger = logger
+  end
+
+  def self.logger
+    @logger
+  end
+
   class ReplayError            < StandardError; end
   class UndefinedKeyError      < ReplayError; end
   class UnhandledEventError    < ReplayError; end
