@@ -8,11 +8,14 @@ module Replay
       base.instance_variable_set :@application_blocks, {}
       base.extend ClassMethods
       base.extend(Replay::Events)
+      base.send :prepend, Initializer
     end
 
-    def initialize(*args)
-      @subscription_manager = Replay::SubscriptionManager.new(Replay.logger)
-      super
+    module Initializer
+      def initialize(*)
+        @subscription_manager = Replay::SubscriptionManager.new(Replay.logger)
+        super
+      end
     end
 
     def add_subscriber(subscriber)

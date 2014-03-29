@@ -17,13 +17,19 @@ module Replay::EventExaminer
     @_events.select{|e| e.class == event.class}
   end
 
-  def initialize()
-    @_events ||= []
-    super
+  module Initializer
+    def initialize(*)
+      @_events ||= []
+      super
+    end
   end
 
   def self.extended(object)
     object.instance_variable_set(:@_events, [])
+  end
+
+  def self.included(base)
+    base.send :prepend, Initializer
   end
 
   def apply(events, raise_unhandled = true)
