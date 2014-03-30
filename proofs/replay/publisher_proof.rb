@@ -57,7 +57,7 @@ module ReplayTest::Proof
   def can_publish_events?
     event = SomeEvent(pid: 123)
     publish(event)
-    @_events.detect{|e| e==event}
+    events.detect{|e| e==event}
   end
 
   def subscribers_receive_events

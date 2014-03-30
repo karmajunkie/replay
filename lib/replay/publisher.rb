@@ -8,18 +8,14 @@ module Replay
       base.instance_variable_set :@application_blocks, {}
       base.extend ClassMethods
       base.extend(Replay::Events)
-      base.send :prepend, Initializer
     end
 
-    module Initializer
-      def initialize(*)
-        @subscription_manager = Replay::SubscriptionManager.new(Replay.logger)
-        super
-      end
+    def subscription_manager
+      @subscription_manager ||= Replay::SubscriptionManager.new(Replay.logger)
     end
 
     def add_subscriber(subscriber)
-      @subscription_manager.add_subscriber(subscriber)
+      subscription_manager.add_subscriber(subscriber)
     end
 
     def apply(events, raise_unhandled = true)
@@ -40,7 +36,7 @@ module Replay
 
     def publish(event)
       apply(event)
-      @subscription_manager.notify_subscribers(to_stream_id, event)
+      subscription_manager.notify_subscribers(to_stream_id, event)
       return self
     end
 
