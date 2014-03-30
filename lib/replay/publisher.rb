@@ -10,13 +10,12 @@ module Replay
       base.extend(Replay::Events)
     end
 
-    def initialize(*args)
-      @subscription_manager = Replay::SubscriptionManager.new(Replay.logger)
-      super
+    def subscription_manager
+      @subscription_manager ||= Replay::SubscriptionManager.new(Replay.logger)
     end
 
     def add_subscriber(subscriber)
-      @subscription_manager.add_subscriber(subscriber)
+      subscription_manager.add_subscriber(subscriber)
     end
 
     def apply(events, raise_unhandled = true)
@@ -37,7 +36,7 @@ module Replay
 
     def publish(event)
       apply(event)
-      @subscription_manager.notify_subscribers(to_stream_id, event)
+      subscription_manager.notify_subscribers(to_stream_id, event)
       return self
     end
 

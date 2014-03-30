@@ -3,34 +3,25 @@ require 'replay/test/test_event_stream'
 
 module Replay::EventExaminer
   def events
-    @_events
+    @_events ||= []
   end
   def published?(event, fuzzy=false)
     if fuzzy
-      !(@_events.detect{|e| event.kind_of_matches?(e) }.nil?)
+      !(events.detect{|e| event.kind_of_matches?(e) }.nil?)
     else
-      @_events.detect{|e| event.is_a?(Class) ? e.class == event : e == event}
+      events.detect{|e| event.is_a?(Class) ? e.class == event : e == event}
     end
   end
 
   def similar_events(event)
-    @_events.select{|e| e.class == event.class}
-  end
-
-  def initialize()
-    @_events ||= []
-    super
-  end
-
-  def self.extended(object)
-    object.instance_variable_set(:@_events, [])
+    events.select{|e| e.class == event.class}
   end
 
   def apply(events, raise_unhandled = true)
     return apply([events], raise_unhandled) unless events.is_a?(Array)
     retval = super(events, raise_unhandled)
     events.each do |event|
-      @_events << event
+      self.events << event
     end
     return retval
   end

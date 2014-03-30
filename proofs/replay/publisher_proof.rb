@@ -7,6 +7,10 @@ class ReplayTest
 
   key :pkey
 
+  def initialize(pkey = 1)
+    @pkey = pkey
+  end
+
   events do
     SomeEvent(pid: Integer)
     UnhandledEvent(pid: Integer)
@@ -19,7 +23,7 @@ class ReplayTest
   end
 
   def pkey
-    1
+    @pkey
   end
 end
 
@@ -53,7 +57,7 @@ module ReplayTest::Proof
   def can_publish_events?
     event = SomeEvent(pid: 123)
     publish(event)
-    @_events.detect{|e| e==event}
+    events.detect{|e| e==event}
   end
 
   def subscribers_receive_events
@@ -140,3 +144,7 @@ proof "Returns self from publish" do
   r.prove{ publish([]) == self}
 end
 
+proof "Can implement initializer with arguments" do
+  r = ReplayTest.new(:foo)
+  r.prove { pkey == :foo }
+end
