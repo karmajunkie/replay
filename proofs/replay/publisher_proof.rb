@@ -17,7 +17,7 @@ class ReplayTest
   end
 
   apply SomeEvent do |event|
-    @event_count ||=0 
+    @event_count ||= 0
     @event_applied = event.pid
     @event_count += 1
   end
