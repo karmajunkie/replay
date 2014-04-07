@@ -1,10 +1,10 @@
 require 'replay'
-require 'replay/test/test_event_stream'
 
 module Replay::EventExaminer
   def events
     @_events ||= []
   end
+
   def published?(event, fuzzy=false)
     if fuzzy
       !(events.detect{|e| event.kind_of_matches?(e) }.nil?)

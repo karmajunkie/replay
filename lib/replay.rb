@@ -35,4 +35,6 @@ require 'replay/publisher'
 require 'replay/subscription_manager'
 require 'replay/backends'
 require 'replay/repository'
+require 'replay/repository/identity_map'
+require 'replay/repository/configuration'
 
