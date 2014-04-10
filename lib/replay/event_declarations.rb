@@ -28,6 +28,7 @@ module Replay
             attribute prop, props[prop]
           end
         end
+        include Virtus::Equalizer.new("#{name.to_s} equalizer", (self.attribute_set.map(&:name) - [:published_at]).map(&:to_s))
       end
       base.const_set name, klass
     end

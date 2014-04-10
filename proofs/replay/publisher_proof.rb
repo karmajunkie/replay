@@ -33,6 +33,11 @@ module ReplayTest::Proof
     events.last.published_at != nil && (Time.now - events.last.published_at) < 20
   end
 
+  def published_at_not_considered_in_equality
+    event = SomeEvent(pid: 123)
+    event == event.with(:published_at => Time.now-100)
+  end
+
   def defines_events?
     self.class.const_defined?(:SomeEvent) && self.class.const_get(:SomeEvent).is_a?(Class)
   end
@@ -152,6 +157,11 @@ end
 proof "sets the publish time on events" do
   r = ReplayTest.new
   r.prove{ sets_publish_time }
+end
+
+proof "publish time is not part of equality" do
+  r = ReplayTest.new
+  r.prove{ published_at_not_considered_in_equality}
 end
 
 proof "Can implement initializer with arguments" do
