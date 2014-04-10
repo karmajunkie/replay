@@ -28,6 +28,11 @@ class ReplayTest
 end
 
 module ReplayTest::Proof
+  def sets_publish_time
+    publish SomeEvent(pid: 123)
+    events.last.published_at != nil && (Time.now - events.last.published_at) < 20
+  end
+
   def defines_events?
     self.class.const_defined?(:SomeEvent) && self.class.const_get(:SomeEvent).is_a?(Class)
   end
@@ -142,6 +147,11 @@ end
 proof "Returns self from publish" do
   r = ReplayTest.new
   r.prove{ publish([]) == self}
+end
+
+proof "sets the publish time on events" do
+  r = ReplayTest.new
+  r.prove{ sets_publish_time }
 end
 
 proof "Can implement initializer with arguments" do

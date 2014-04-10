@@ -22,7 +22,7 @@ module Replay
     def declare_event(base, name, props)
       klass = Class.new do
         include Replay::EventDecorator
-
+        attribute :published_at, Time, default: lambda{|p,a| Time.now}
         values do
           props.keys.each do |prop|
             attribute prop, props[prop]
