@@ -37,4 +37,7 @@ require 'replay/backends'
 require 'replay/repository'
 require 'replay/repository/identity_map'
 require 'replay/repository/configuration'
+require 'replay/observer'
+require 'replay/router'
+require 'replay/router/default_router'
 

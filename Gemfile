@@ -10,6 +10,5 @@ end
 
 group :test do
   gem "proof", :git => 'https://github.com/Sans/proof.git'
-  gem "minitest"
-  gem "mocha"
+  gem 'byebug'
 end
