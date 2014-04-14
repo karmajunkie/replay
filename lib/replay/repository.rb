@@ -40,7 +40,6 @@ module Replay
         new_obj
       end
 
-
       def prepare(obj)
         @configuration.subscribers.each do |subscriber|
           obj.add_subscriber(subscriber)

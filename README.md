@@ -97,3 +97,16 @@ You can also create a repository for your test environment (though for unit test
 
     #features/env.rb
     Repository.configuration.add_default_listener EventMonitor.new
+
+
+##Additional gems
+
+[replay-router](http://github.com/karmajunkie/replay-router) provides message routing to services/observers defined elsewhere in your application. 
+
+[replay-rails](http://github.com/karmajunkie/replay-rails) provides a very basic ActiveRecord-based event store. Its a good template for building your own event store and light duties in an application in which aggregates don't receive hundreds or thousands of events. 
+
+
+##TODO
+* Implement snapshots for efficient load from repository
+* Better documentation
+* Build a demonstration app
