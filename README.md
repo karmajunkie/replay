@@ -98,10 +98,51 @@ You can also create a repository for your test environment (though for unit test
     #features/env.rb
     Repository.configuration.add_default_listener EventMonitor.new
 
+###Observers
+Replay provides a default message router for observers of events. 
+
+In your repository implementation, add :replay_router to the configuration's default subscribers:
+
+    class Repository
+      include Replay::Repository
+
+      configure do |config|
+        config.add_default_subscriber :replay_router
+      end
+    end
+
+In your application or domain services:
+
+    class MailService
+      include Replay::Observer
+
+      observe Model::EventHappened do |event|
+        #handle the event 
+      end
+    end
+
+It may be advantageous in some situations to create multiple routers:
+
+    class InternalRouter
+      include Replay::Router
+    end
+
+    class Repository
+      include Replay::Repository
+
+      configure do |config|
+        config.add_default_subscriber InternalRouter
+      end
+    end
+
+    class MailService
+      include Replay::Observer
+      router InternalRouter
+
+      #observations...
+    end
 
 ##Additional gems
-
-[replay-router](http://github.com/karmajunkie/replay-router) provides message routing to services/observers defined elsewhere in your application. 
 
 [replay-rails](http://github.com/karmajunkie/replay-rails) provides a very basic ActiveRecord-based event store. Its a good template for building your own event store and light duties in an application in which aggregates don't receive hundreds or thousands of events. 
 
