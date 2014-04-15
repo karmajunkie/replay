@@ -37,6 +37,16 @@ Replay::SubscriptionManager.class_exec do
   end
 end
 
+Replay::Router.module_exec do 
+  def inspect
+    self.class.to_s 
+  end
+
+  def observed_by?(object)
+    @subscription_manager.has_subscriber?(object)
+  end
+end
+
 Replay::Publisher::ClassMethods.module_exec do
   def self.extended(base)
     @publishers ||= []

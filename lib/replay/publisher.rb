@@ -1,21 +1,12 @@
 module Replay
   module Publisher
     def self.included(base)
-      include_essentials base
-    end
-
-    def self.include_essentials(base)
       base.instance_variable_set :@application_blocks, {}
       base.extend ClassMethods
       base.extend(Replay::Events)
-    end
-
-    def subscription_manager
-      @subscription_manager ||= Replay::SubscriptionManager.new(Replay.logger)
-    end
-
-    def add_subscriber(subscriber)
-      subscription_manager.add_subscriber(subscriber)
+      base.class_exec do
+        include Replay::Subscriptions
+      end
     end
 
     def apply(events, raise_unhandled = true)

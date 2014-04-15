@@ -1,12 +1,4 @@
 require 'test_helper'
-
-module Router
-  module Test
-    def has_observer?(object)
-      @subscription_manager.has_subscriber?(object)
-    end
-  end
-end
 class TypedEvent
 
 end
@@ -20,8 +12,6 @@ class Observer
   end
 end
 
-Replay::Router::DefaultRouter.send(:include, Router::Test)
-
 describe Replay::Router::DefaultRouter do
   before do
     @router = Replay::Router::DefaultRouter.instance
@@ -29,7 +19,7 @@ describe Replay::Router::DefaultRouter do
   describe "adding observers" do
     it "tracks the observing object" do
       @router.add_observer(Observer)
-      assert(@router.has_observer?(Observer), "router does not track observer")
+      @router.must_be :observed_by?, Observer
     end
   end
   describe "event publishing" do

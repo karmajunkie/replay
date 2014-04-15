@@ -13,6 +13,7 @@ module Replay
   class UndefinedKeyError      < ReplayError; end
   class UnhandledEventError    < ReplayError; end
   class UnknownEventError      < ReplayError; end
+  class InvalidRouterError     < ReplayError; end
   class InvalidStorageError    < ReplayError;
     def initialize(*args)
       klass = args.shift
@@ -33,6 +34,7 @@ require 'replay/event_decorator'
 require 'replay/event_declarations'
 require 'replay/publisher'
 require 'replay/subscription_manager'
+require 'replay/subscriptions'
 require 'replay/backends'
 require 'replay/repository'
 require 'replay/repository/identity_map'

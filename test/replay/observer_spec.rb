@@ -21,6 +21,19 @@ class ObserverTest
   end
 end
 
+class NonstandardRouter
+  include Singleton
+  include Replay::Router
+end
+
+class RoutedObserverTest
+  include Replay::Observer
+  router NonstandardRouter.instance
+
+  observe ObservedEvent do |e|
+  end
+end
+
 describe Replay::Observer do
   before do
     ObserverTest.reset
@@ -33,5 +46,13 @@ describe Replay::Observer do
   it "does not notify of unobserved events" do
     ObserverTest.published('123', UnobservedEvent.new)
     ObserverTest.wont_be :observed?
+  end
+
+  it "links to DefaultRouter by default" do
+    Replay::Router::DefaultRouter.instance.must_be :observed_by?,ObserverTest
+  end
+
+  it "links to a substitute router when instructed" do
+    NonstandardRouter.instance.must_be :observed_by?, RoutedObserverTest
   end
 end
