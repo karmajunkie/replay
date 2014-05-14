@@ -25,8 +25,8 @@ module Replay
     end
     protected :block_for
 
-    def publish(event)
-      apply(event)
+    def publish(event, raise_unhandled = true)
+      apply(event, raise_unhandled)
       subscription_manager.notify_subscribers(to_stream_id, event)
       return self
     end
