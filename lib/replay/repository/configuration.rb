@@ -2,6 +2,7 @@ module Replay
   module Repository
     class Configuration
       attr_accessor :logger
+      attr_writer :reject_load_on_empty_stream
       def initialize(logger = nil)
         @default_subscribers =[]
         @logger = logger
@@ -26,6 +27,11 @@ module Replay
         raise Replay::InvalidSubscriberError.new(store) unless store.respond_to?(:published)
         @store = store
         add_default_subscriber(@store)
+      end
+
+      def reject_load_on_empty_stream?
+        @reject_load_on_empty_stream ||= true
+        @reject_load_on_empty_stream
       end
 
       def store

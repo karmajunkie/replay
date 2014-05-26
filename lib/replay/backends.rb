@@ -28,8 +28,8 @@ module Replay
       end
 
       def published(envelope)
-        @store[stream_id] ||= []
-        @store[stream_id] << envelope
+        @store[envelope.stream_id] ||= []
+        @store[envelope.stream_id] << envelope
       end
       
       def event_stream(stream_id)

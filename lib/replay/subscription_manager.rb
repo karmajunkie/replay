@@ -17,7 +17,7 @@ module Replay
     def notify_subscribers(stream_id, event, metadata = {})
       @subscribers.each do |sub|
         begin
-          meta = metadata.merge(@session_metadata)
+          meta = metadata.merge(@session_metadata || {}) 
           sub.published(EventEnvelope.new(stream_id, event, meta))
           #sub.published(stream_id, event, metadata)
         rescue Exception => e

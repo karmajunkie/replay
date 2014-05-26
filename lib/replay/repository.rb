@@ -25,7 +25,7 @@ module Replay
           raise Errors::EventStreamNotFoundError.new("Could not find any events for stream identifier #{stream_id}") if options[:create].nil?
         end
 
-        obj = klass_or_instance.is_a?(Class) ? prepare(klass.new, options[:metadata]) : klass_or_instance
+        obj = klass_or_instance.is_a?(Class) ? prepare(klass_or_instance.new, options[:metadata]) : klass_or_instance
         obj.create(stream_id) if options[:create] && stream.empty?
         obj.apply(stream.map(&:event))
 
@@ -41,7 +41,7 @@ module Replay
       end
 
       def prepare(obj, metadata={})
-        obj.subscription_manager = SubscriptionManager.new(configuration.logger, metadata)
+        obj.subscription_manager = SubscriptionManager.new(configuration.logger, metadata || {})
         @configuration.subscribers.each do |subscriber|
           obj.add_subscriber(subscriber)
         end
