@@ -13,28 +13,36 @@ module Replay
       return apply([events], raise_unhandled) unless events.is_a?(Array)
 
       events.each do |event|
-        blk = block_for(event.class)
-        raise UnhandledEventError.new "event #{event.class.name} is not handled by #{self.class.name}" if (blk.nil? && raise_unhandled)
-        self.instance_exec(event, &blk)
+        apply_method = apply_method_for(event.class)
+        raise UnhandledEventError.new "event #{event.type} is not handled by #{self.class.name}" if (!respond_to?(apply_method) && raise_unhandled)
+        self.send(apply_method, event)
       end
       return self
     end
 
-    def block_for(event_type)
-      self.class.block_for(event_type)
+    def apply_method_for(klass)
+      self.class.apply_method_for(klass)
     end
-    protected :block_for
 
-    def publish(event)
-      apply(event)
-      subscription_manager.notify_subscribers(to_stream_id, event)
+    private :apply_method_for
+
+    def publish(event, metadata={})
+      return publish([event]) unless event.is_a?(Array)
+      event.each do |evt|
+        metadata = ({:published_at => Time.now}.merge!(metadata))
+        apply(evt)
+        subscription_manager.notify_subscribers(to_stream_id, evt, metadata)
+      end
       return self
     end
 
-
     def to_stream_id
-      raise Replay::UndefinedKeyError.new("No key attribute defined for #{self.class.to_s}") unless self.class.key_attr
-      self.send(self.class.key_attr).to_s
+      raise Replay::UndefinedKeyError.new("No key attribute defined for #{self.type}") unless self.key_attr
+      self.send(self.key_attr).to_s
+    end
+
+    def key_attr
+      self.class.key_attr
     end
 
     module ClassMethods
@@ -47,16 +55,16 @@ module Replay
       end
 
       def apply(event_type, &block)
-        @application_blocks[stringify_class(event_type)] = block
-      end
-
-      def block_for(event_type)
-        blk = @application_blocks[stringify_class(event_type)]
-        return blk
+        method_name = apply_method_for(event_type)
+        define_method method_name, block
       end
 
       def stringify_class(klass)
         Replay::Inflector.underscore(klass.to_s.dup)
+      end
+
+      def apply_method_for(klass)
+        "handle_#{stringify_class(klass).gsub(".", "_")}"
       end
     end
   end

@@ -14,9 +14,9 @@ module Replay::SubscriptionManager::Proof
   def sub_gets_notified
     sub = Class.new do
       attr_accessor :stream, :event
-      def published(stream, event)
-        self.stream = stream
-        self.event = event
+      def published(envelope)
+        self.stream = envelope.stream_id
+        self.event = envelope.event
       end
     end.new
     add_subscriber(sub)

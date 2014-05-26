@@ -61,8 +61,10 @@ Replay::EventDecorator.module_exec do
     relevant_attrs_match = event.attributes.reject{|k,v| v.nil?}
     relevant_attrs_self = self.attributes.reject{|k,v| v.nil?}
 
+    keys_self = relevant_attrs_self.keys
     if (relevant_attrs_self.keys - relevant_attrs_match.keys).empty?
-      if relevant_attrs_self.reject{|k, v| event[k] == v}.any?
+      #publication time is not considered part of the event data
+      if keys_self.reject{|k| event[k] == self[k]}.any?
         return false
       else
         return true

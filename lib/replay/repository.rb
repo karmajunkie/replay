@@ -19,15 +19,15 @@ module Replay
         repository_load(klass, stream_id, options)
       end
 
-      def repository_load(klass, stream_id, options={})
-        events = store.event_stream(stream_id)
-        if events.empty?
+      def repository_load(klass_or_instance, stream_id, options={})
+        stream = store.event_stream(stream_id)
+        if stream.empty? && configuration.reject_load_on_empty_stream?
           raise Errors::EventStreamNotFoundError.new("Could not find any events for stream identifier #{stream_id}") if options[:create].nil?
         end
 
-        obj = prepare(klass.new)
-        obj.create(stream_id) if options[:create] && events.empty?
-        obj.apply(events)
+        obj = klass_or_instance.is_a?(Class) ? prepare(klass.new, options[:metadata]) : klass_or_instance
+        obj.create(stream_id) if options[:create] && stream.empty?
+        obj.apply(stream.map(&:event))
 
         obj
       end
@@ -40,7 +40,8 @@ module Replay
         new_obj
       end
 
-      def prepare(obj)
+      def prepare(obj, metadata={})
+        obj.subscription_manager = SubscriptionManager.new(configuration.logger, metadata)
         @configuration.subscribers.each do |subscriber|
           obj.add_subscriber(subscriber)
         end
@@ -48,7 +49,7 @@ module Replay
       end
 
       def configure 
-        @configuration ||= Configuration.new
+        @configuration ||= Configuration.default
         yield @configuration
         @configuration
       end

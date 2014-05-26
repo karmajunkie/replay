@@ -21,8 +21,12 @@ proof "fuzzy matching of events" do
 
   e1 = TestEvent.new(one: '1')
   e2 = TestEvent.new(one: '1', two: '2')
+  e3 = TestEvent.new(one: '1', two: '2')
+  e4 = TestEvent.new(one: '1', two: '4')
 
   e1.prove{ matches_fuzzy(e2)}
   e2.prove{ !matches_fuzzy(e1)}
-
+  e2.prove{ matches_fuzzy(e2)}
+  e2.prove{ matches_fuzzy(e3)}
+  e2.prove{ !matches_fuzzy(e4)}
 end

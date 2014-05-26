@@ -1,5 +1,6 @@
 require_relative "../proofs_init.rb"
 require 'replay/test'
+require 'replay/test/test_event_stream'
 
 class ReplayTest
   include Replay::Publisher
@@ -29,8 +30,10 @@ end
 
 module ReplayTest::Proof
   def sets_publish_time
+    ts=Replay::TestEventStream.new
+    add_subscriber(ts)
     publish SomeEvent(pid: 123)
-    events.last.published_at != nil && (Time.now - events.last.published_at) < 20
+    ts.events.last.metadata[:published_at] != nil && (Time.now - ts.events.last.metadata[:published_at]) < 1
   end
 
   def published_at_not_considered_in_equality
@@ -72,7 +75,7 @@ module ReplayTest::Proof
 
   def subscribers_receive_events
     sub = Class.new do
-      def published(stream, event)
+      def published(envelope)
         @published = true
       end
       def published?; @published; end
@@ -154,7 +157,7 @@ proof "Returns self from publish" do
   r.prove{ publish([]) == self}
 end
 
-proof "sets the publish time on events" do
+proof "adds the publish time to event metadata" do
   r = ReplayTest.new
   r.prove{ sets_publish_time }
 end

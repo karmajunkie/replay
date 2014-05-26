@@ -43,7 +43,7 @@ RSpec::Matchers.define :publish do |expected_event|
   end
 
   def event_interpretation(event)
-    "#{event.class.to_s} [#{event.attributes.reject{|k,v| v.nil?}.keys.map{|k| "#{k.to_s} = #{event.attributes[k]}"}.join(", ")}]"
+    "#{event.type} [#{event.attributes.reject{|k,v| v.nil?}.keys.map{|k| "#{k.to_s} = #{event.attributes[k]}"}.join(", ")}]"
   end
 
 end

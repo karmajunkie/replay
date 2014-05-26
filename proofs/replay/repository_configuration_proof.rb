@@ -2,8 +2,10 @@ require_relative "../proofs_init.rb"
 require 'replay/test'
 
 class Subscriber
-  def published(stream_id, event); end
+  def published(envelope); end
 end
+
+title "Repository configuration"
 
 module Replay::Repository::Configuration::Proof
   def can_configure_store?

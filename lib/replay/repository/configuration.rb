@@ -1,8 +1,14 @@
 module Replay
   module Repository
     class Configuration
-      def initialize
+      attr_accessor :logger
+      def initialize(logger = nil)
         @default_subscribers =[]
+        @logger = logger
+      end
+
+      def self.default
+        self.new(Replay.logger)
       end
 
       def add_default_subscriber(subscriber)

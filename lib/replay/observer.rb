@@ -21,7 +21,7 @@ module Replay
       end
 
       def published(stream_id, event)
-        blk = @observer_blocks[Replay::Inflector.underscore(event.class.to_s)]
+        blk = @observer_blocks[Replay::Inflector.underscore(event.type)]
         blk.call(stream_id, event, binding) if blk
       end
     end

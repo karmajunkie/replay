@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Replay::VERSION
   s.authors     = ["karmajunkie"]
   s.email       = ["keith.gaddis@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/karmajunkie/replay"
   s.summary     = %q{Replay supports event-sourced data models.}
   s.description = %q{Replay supports event-sourced data models.}
 

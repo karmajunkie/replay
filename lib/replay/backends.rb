@@ -15,8 +15,8 @@ module Replay
       def initialize
         @store = {}
       end
-      def self.published(stream_id, event)
-        instance.published(stream_id, event)
+      def self.published(envelope)
+        instance.published(envelope)
       end
 
       def self.clear
@@ -27,9 +27,9 @@ module Replay
         @store = {}
       end
 
-      def published(stream_id, event)
+      def published(envelope)
         @store[stream_id] ||= []
-        @store[stream_id] << event
+        @store[stream_id] << envelope
       end
       
       def event_stream(stream_id)
