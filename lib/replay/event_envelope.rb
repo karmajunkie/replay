@@ -11,6 +11,10 @@ module Replay
       @event.type
     end
 
+    def explode
+      return @stream_id, @event, @metadata
+    end
+
     def method_missing(method, *args)
       return @event.send(method, args) if @event.respond_to?(method)
       super

@@ -31,6 +31,12 @@ module Replay::EventExaminer
   end
 end
 
+Replay::Observer.module_exec do
+  def observes?(event_class)
+    @observer_blocks.has_key?(Replay::Inflector.underscore(event_class.to_s))
+  end
+end
+
 Replay::SubscriptionManager.class_exec do
   def has_subscriber?(subscriber)
     @subscribers.include?(subscriber)

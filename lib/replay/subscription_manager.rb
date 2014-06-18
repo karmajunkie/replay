@@ -18,7 +18,7 @@ module Replay
       @subscribers.each do |sub|
         begin
           meta = metadata.merge(@session_metadata || {}) 
-          sub.published(EventEnvelope.new(stream_id, event, meta))
+          sub.published(EventEnvelope.new(stream_id, event.dup, meta))
           #sub.published(stream_id, event, metadata)
         rescue Exception => e
           #hmmmm

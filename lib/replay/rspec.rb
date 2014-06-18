@@ -48,3 +48,9 @@ RSpec::Matchers.define :publish do |expected_event|
 
 end
 
+RSpec::Matchers.define :observes do |event_class|
+  match do |observer|
+    observer.observes?(event_class)
+  end
+end
+
