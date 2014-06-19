@@ -12,8 +12,8 @@ module Replay
       subscription_manager.add_subscriber(subscriber)
     end
 
-    def published(stream_id, event, metadata)
-      @subscription_manager.notify_subscribers(stream_id, event, metadata)
+    def published(envelope)
+      subscription_manager.notify_subscribers(*(envelope.explode))
     end
   end
 end
