@@ -16,8 +16,8 @@ module Replay
         instance.add_subscriber(observer)
       end
 
-      def published(stream, event)
-        instance.published(stream, event)
+      def published(envelope)
+        instance.published( envelope)
       end
     end
   end
