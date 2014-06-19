@@ -34,13 +34,13 @@ module Replay
         @observed_events.dup
       end
 
-      def handle(stream_id, event)
-        published(stream_id, event)
+      def handle(envelope)
+        published(envelope)
       end
 
-      def published(stream_id, envelope)
+      def published(envelope)
         blk = @observer_blocks[Replay::Inflector.underscore(envelope.type)]
-        blk.call(stream_id, envelope, binding) if blk
+        blk.call(envelope, binding) if blk
       end
 
       private
