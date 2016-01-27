@@ -14,7 +14,6 @@ module Replay
 
       events.each do |event|
         apply_method = apply_method_for(event.class)
-        raise UnhandledEventError.new "event #{event.type} is not handled by #{self.class.name}" if (!respond_to?(apply_method) && raise_unhandled)
         self.send(apply_method, event)
       end
       return self
