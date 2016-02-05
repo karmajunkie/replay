@@ -14,7 +14,9 @@ module Replay
 
       events.each do |event|
         apply_method = apply_method_for(event.class)
-        self.send(apply_method, event)
+        if self.respond_to?(apply_method)
+          self.send(apply_method, event)
+        end
       end
       return self
     end
