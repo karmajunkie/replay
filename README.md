@@ -1,12 +1,15 @@
-#Replay
+# Replay
 Replay is a gem to support event sourcing data within domain boundaries. With event sourced data, the application stores data as a series of domain events, which are applied to the domain object in order to mutate state.
 
-###CQRS/ES 30 second intro
+## Disclaimer (5/30/2017)
+This repo is here primarily for historical reasons—if you are starting a new project in Ruby and want to eventsource some of your data, I recommend checking out [Eventide Project](https://github.com/eventide-project) and the various libraries that make up that project, which is (as of this writing) under active development by individuals who are much more concerned than I am with moving Ruby forward in that direction. 
+
+### CQRS/ES 30 second intro
 [Command Query Responsibility Segregation](http://codebetter.com/gregyoung/2010/02/16/cqrs-task-based-uis-event-sourcing-agh/) (and [Fowler's explanation](http://martinfowler.com/bliki/CQRS.html) is a pattern popularized by Greg Young and Udi Dahan from within the sphere of Domain Driven Design. The general idea is that within domain models, objects are rarely good at both representing truth and being purposeful for queries and reporting, and therefore we should separate the responsibilities.  
 
 [Event Sourcing](http://martinfowler.com/eaaDev/EventSourcing.html) is a pattern that is not required by (but pairs extremely well with) CQRS. However, by embracing this pattern a system can adapt to new reporting and query requirements at any time with a great deal of flexibility, and the use of messaging/pub-sub along with events creates an easy path to breaking apart monolithic applications and separating domains.
 
-###A short example
+### A short example
 
     class ReplayExample
       include Replay::Publisher
@@ -71,9 +74,9 @@ Commands are the art and science of CQRS. In the above example, I've implemented
 
 The above command class performs the same function, but has some advantages. In a Rails application, you can mix in ActiveModel::Validations to get ActiveRecord-style validators on it. You can also use Virtus (recommended) or ActiveModel to make it ActiveModel compliant and use it as a form object. This pattern is especially useful when you're dealing with non-domain services (e.g. credit card processors.) You can publish events from any model; there's nothing special about that (though its best if you don't do it without good reason, or you'll subvert one of the great advantages of DDD—separation of bounded contexts).
 
-##Digging deeper
+## Digging deeper
 
-###The Repository
+### The Repository
 The Repository is an application-defined object (replay will generate one for you) which will load your domain objects from storage. The repository's job is to find the event stream requested and apply the events from the event stream to a newly created object of the supplied type. Every application has at least one repository, and may have several.
 
 Use it like so:
@@ -98,7 +101,7 @@ You can also create a repository for your test environment (though for unit test
     #features/env.rb
     Repository.configuration.add_default_listener EventMonitor.new
 
-###Observers
+### Observers
 Replay provides a default message router for observers of events. 
 
 In your repository implementation, add :replay_router to the configuration's default subscribers:
@@ -142,12 +145,12 @@ It may be advantageous in some situations to create multiple routers:
       #observations...
     end
 
-##Additional gems
+## Additional gems
 
 [replay-rails](http://github.com/karmajunkie/replay-rails) provides a very basic ActiveRecord-based event store. Its a good template for building your own event store and light duties in an application in which aggregates don't receive hundreds or thousands of events. 
 
 
-##TODO
+## TODO
 * Implement snapshots for efficient load from repository
 * Better documentation
 * Build a demonstration app
